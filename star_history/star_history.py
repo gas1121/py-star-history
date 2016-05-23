@@ -1,5 +1,6 @@
 import random
 import requests
+import datetime
 from star_history.auth import get_auth_data
 from star_history.exceptions import (
     StarHistoryError, NoEnoughStargazorsError, ReachLimitError, ConnectionError
@@ -21,6 +22,7 @@ def get_star_history(user, repo_name):
         star_count = get_star_count(user, repo_name)
     except StarHistoryError:
         raise
+    curr_time = datetime.datetime.now().isoformat()
     page_count = get_page_count(star_count)
     history_result = dict()
     history_result['repo_name'] = repo_name
@@ -32,12 +34,10 @@ def get_star_history(user, repo_name):
     if page_count < 2:
         raise NoEnoughStargazorsError
     elif page_count <= all_scanned_page_count:
-        # page<=all_scanned_page_count
         for curr_page in range(page_count):
             page_url = get_stargazers_page_url(user, repo_name, curr_page)
             scan_page_data.append((curr_page, page_url))
     else:
-        # page>all_scanned_page_count
         step = page_count//15
         for curr_page in range(1, page_count, step):
             page_url = get_stargazers_page_url(user, repo_name, curr_page)
@@ -45,8 +45,15 @@ def get_star_history(user, repo_name):
     for curr_page_data in scan_page_data:
         try:
             result = requests.get(curr_page_data[1], headers=headers, params=get_params())
-        except (requests.ConnectionError, requests.Timeout):
+        except (requests.ConnectionError, requests.Timeout, requests.HTTPError) as e:
             raise ConnectionError
+        if result.status_code == 422:
+            #422 mains page is unreachable,manually add last count
+            history_result['history_data'].append({
+                "date": curr_time,
+                "count": star_count
+            })
+            break
         curr_page_stargazers = result.json()
         history_result['history_data'] += get_history_from_stargazer_data(
             curr_page_stargazers, curr_page_data[0])
@@ -92,6 +99,8 @@ def get_stargazers_page_url(user, repo_name, curr_page):
 
 
 def get_history_from_stargazer_data(stargazers_data, curr_page):
+    #TODO handle error like
+    #{'documentation_url': 'https://developer.github.com/v3/#pagination', 'message': 'In order to ....'}
     result = []
     start_count = curr_page*30+1
     end_count = curr_page*30+len(stargazers_data)
