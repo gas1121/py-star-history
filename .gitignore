@@ -1,7 +1,11 @@
 .idea/
-Include/
-Lib/
-Scripts/
+[iI]nclude/
+[lL]ib/
+/lib64
+[sS]cripts/
 __pycache__/
+log/
+bin/
+pip-selfcheck.json
 
 star_history/auth.json
