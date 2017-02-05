@@ -7,8 +7,12 @@ class StarHistoryAPI(Resource):
     def get(self, user, repo):
         try:
             data = star_history.get_star_history(user, repo)
-        except (star_history.NoEnoughStargazorsError,
-                star_history.ReachLimitError, star_history.ConnectionError):
+        except star_history.NoEnoughStargazorsError:
+            #return message when no enough stars
+            result = dict()
+            result["message"] = "No enough stars"
+            return result
+        except (star_history.ReachLimitError, star_history.ConnectionError) as error:
             #TODO manage different exceptions
             abort(404)
         return data
