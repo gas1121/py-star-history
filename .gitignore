@@ -6,6 +6,7 @@
 __pycache__/
 log/
 bin/
+tcl/
 pip-selfcheck.json
 
 star_history/auth.json
