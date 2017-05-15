@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, Blueprint
 from flask_restplus import Api, Resource, abort
 import star_history
 
@@ -19,12 +19,16 @@ class StarHistoryAPI(Resource):
         return data
 
 
+# Blueprint is needed to avoid swagger ui static assets 404 error
 app = Flask(__name__)
-api = Api(app, version='1.0', title='Github star history api',
+blueprint = Blueprint('starhistory', __name__,
+                      url_prefix='/api/starhistory/1.0')
+api = Api(blueprint, version='1.0', title='Github star history api',
           description='API for getting star history',
-          doc='/api/starhistory/doc/')
-api.add_resource(StarHistoryAPI, '/api/starhistory/1.0/<user>/<repo>/',
+          doc='/doc/')
+api.add_resource(StarHistoryAPI, '/<user>/<repo>/',
                  endpoint='starhistory')
+app.register_blueprint(blueprint)
 
 
 @app.after_request
