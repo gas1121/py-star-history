@@ -21,8 +21,9 @@ class StarHistoryAPI(Resource):
 
 app = Flask(__name__)
 api = Api(app, version='1.0', title='Github star history api',
-          description='API for getting star history')
-api.add_resource(StarHistoryAPI, '/api/starhistory/1.0/<user>/<repo>',
+          description='API for getting star history',
+          doc='/api/starhistory/doc/')
+api.add_resource(StarHistoryAPI, '/api/starhistory/1.0/<user>/<repo>/',
                  endpoint='starhistory')
 
 
