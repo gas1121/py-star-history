@@ -6,16 +6,17 @@
 #
 --index-url https://mirrors.ustc.edu.cn/pypi/web/simple
 
-aniso8601==1.2.1          # via flask-restful
+aniso8601==1.2.1          # via flask-restplus
 click==6.7                # via flask
-flask-restful==0.3.5
-flask==0.12.1             # via flask-restful
+flask-restplus==0.10.1
+flask==0.12.1             # via flask-restplus
 gunicorn==19.7.1
 itsdangerous==0.24        # via flask
 jinja2==2.9.6             # via flask
+jsonschema==2.6.0         # via flask-restplus
 markupsafe==1.0           # via jinja2
 python-dateutil==2.6.0    # via aniso8601
-pytz==2017.2              # via flask-restful
+pytz==2017.2              # via flask-restplus
 requests==2.14.2
-six==1.10.0               # via flask-restful, python-dateutil
+six==1.10.0               # via flask-restplus, python-dateutil
 werkzeug==0.12.1          # via flask

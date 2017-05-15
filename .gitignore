@@ -8,5 +8,6 @@ log/
 bin/
 tcl/
 pip-selfcheck.json
+.vscode/
 
 star_history/auth.json
