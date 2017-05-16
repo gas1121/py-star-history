@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint
-from flask_restplus import Api, Resource, abort
+from flask_restplus import Api, Resource, abort, apidoc
 import star_history
 
 
@@ -21,6 +21,10 @@ class StarHistoryAPI(Resource):
 
 # Blueprint is needed to avoid swagger ui static assets 404 error
 app = Flask(__name__)
+# register swagger ui static assets to avoid 404 error when use nginx 
+# as reverse proxy server with sub path
+app.register_blueprint(apidoc.apidoc, url_prefix='/api/starhistory/1.0')
+
 blueprint = Blueprint('starhistory', __name__,
                       url_prefix='/api/starhistory/1.0')
 api = Api(blueprint, version='1.0', title='Github star history api',
