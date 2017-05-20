@@ -21,7 +21,7 @@ class StarHistoryAPI(Resource):
 
 
 # url prefix
-url_prefix = '/api/starhistory/1.0'
+url_prefix = '/api/pystarhistory/1.0'
 
 
 # Blueprint is needed to avoid swagger ui static assets 404 error
